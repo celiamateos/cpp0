@@ -12,6 +12,7 @@
 #include <iostream>
 #include <iomanip>
 #include <limits>
+#include <sstream>
 #include "PhoneBook.h"
 
 PhoneBook::PhoneBook() : contactCount(0) {}
@@ -54,37 +55,45 @@ void PhoneBook::addContact()
     }
 }
 
+
 void PhoneBook::searchContact() const {
-    // Display contacts in a formatted way
-    std::cout << std::setw(10) << "Index" 
-              << "|" << std::setw(10) << "First Name" 
-              << "|" << std::setw(10) << "Last Name" 
-              << "|" << std::setw(10) << "Nickname" 
+    std::cout << std::setw(10) << "Index"
+              << "|" << std::setw(10) << "First Name"
+              << "|" << std::setw(10) << "Last Name"
+              << "|" << std::setw(10) << "Nickname"
               << std::endl;
 
     for (int i = 0; i < contactCount; i++) {
-        // Display formatted contact details
-        std::cout << std::setw(10) << i 
-                  << "|" << std::setw(10) << contacts[i].getFirstName().substr(0, 9) + (contacts[i].getFirstName().length() > 9 ? "." : "") 
-                  << "|" << std::setw(10) << contacts[i].getLastName().substr(0, 9) + (contacts[i].getLastName().length() > 9 ? "." : "") 
-                  << "|" << std::setw(10) << contacts[i].getNickname().substr(0, 9) + (contacts[i].getNickname().length() > 9 ? "." : "") 
+        std::cout << std::setw(10) << i
+                  << "|" << std::setw(10) << contacts[i].getFirstName().substr(0, 9) + (contacts[i].getFirstName().length() > 9 ? "." : "")
+                  << "|" << std::setw(10) << contacts[i].getLastName().substr(0, 9) + (contacts[i].getLastName().length() > 9 ? "." : "")
+                  << "|" << std::setw(10) << contacts[i].getNickname().substr(0, 9) + (contacts[i].getNickname().length() > 9 ? "." : "")
                   << std::endl;
     }
 
-    int index;
-    std::cout << "Enter the index of the contact to view: ";
-    std::cin >> index;
-    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // Ignore the newline
+    std::string input;
+    int index = -1;
 
-    if (index < 0 || index >= contactCount) {
-        std::cout << "Invalid index!" << std::endl;
-    } else {
-        std::cout << "Contact Details:\n";
-        std::cout << "First Name: " << contacts[index].getFirstName() << std::endl;
-        std::cout << "Last Name: " << contacts[index].getLastName() << std::endl;
-        std::cout << "Nickname: " << contacts[index].getNickname() << std::endl;
-        std::cout << "Phone Number: " << contacts[index].getPhoneNumber() << std::endl;
-        std::cout << "Darkest Secret: " << contacts[index].getDarkestSecret() << std::endl;
+    while (true) {
+        std::cout << "Enter the index of the contact to view: ";
+        std::getline(std::cin, input);  // Leer la entrada como cadena
+
+        std::stringstream ss(input);    // Convertir la cadena a un flujo de texto
+        if (!(ss >> index)) {           // Intentar convertir a entero
+            std::cout << "Invalid input, please enter a number." << std::endl;
+            continue;
+        }
+
+        if (index < 0 || index >= contactCount) {
+            std::cout << "Invalid index!" << std::endl;
+        } else {
+            std::cout << "Contact Details:\n";
+            std::cout << "First Name: " << contacts[index].getFirstName() << std::endl;
+            std::cout << "Last Name: " << contacts[index].getLastName() << std::endl;
+            std::cout << "Nickname: " << contacts[index].getNickname() << std::endl;
+            std::cout << "Phone Number: " << contacts[index].getPhoneNumber() << std::endl;
+            std::cout << "Darkest Secret: " << contacts[index].getDarkestSecret() << std::endl;
+            break;
+        }
     }
 }
-
